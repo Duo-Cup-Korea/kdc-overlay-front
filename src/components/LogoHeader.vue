@@ -40,6 +40,7 @@ const horizontal = ref(props.orientation === "horizontal");
 <style scoped>
 .master-logo-header {
   font-size: 24px;
+  white-space: nowrap;
 }
 
 .logo {

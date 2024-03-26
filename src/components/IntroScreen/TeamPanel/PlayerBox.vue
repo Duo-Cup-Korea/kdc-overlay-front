@@ -11,7 +11,7 @@ const pfpUrl = ref("https://a.ppy.sh/6665667");
 <template>
   <div class="master-player-box">
     <div class="pfp" :style="{ backgroundImage: `url(${pfpUrl})` }"></div>
-    <div class="content">
+    <div class="contentBg">
       <div class="nick">yhsphd</div>
       <div class="line"></div>
       <div class="rank roboto">#14,216</div>
@@ -37,7 +37,7 @@ const pfpUrl = ref("https://a.ppy.sh/6665667");
   background-size: cover;
 }
 
-.content {
+.contentBg {
   display: flex;
   flex-direction: column;
   justify-content: center;

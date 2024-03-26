@@ -18,7 +18,7 @@ const hidePositionBar = computed(() => positionFrac.value < 10);
 <template>
   <div class="master-music-player">
     <div class="line-highlight"></div>
-    <div class="content horizontal-box">
+    <div class="contentBg horizontal-box">
       <div class="cover" :style="{ backgroundImage: `url('${cover}')` }"></div>
       <div class="info">
         <div class="title">{{ title }}</div>
@@ -47,7 +47,7 @@ const hidePositionBar = computed(() => positionFrac.value < 10);
   width: 100%;
 }
 
-.content {
+.contentBg {
   padding: 20px;
 }
 

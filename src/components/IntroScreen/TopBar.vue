@@ -1,7 +1,6 @@
 <script setup>
 import LogoHeader from "@/components/LogoHeader.vue";
 import TimeLeft from "@/components/IntroScreen/TopBar/TimeLeft.vue";
-import { ref } from "vue";
 
 defineProps({
   showCountdown: Boolean,

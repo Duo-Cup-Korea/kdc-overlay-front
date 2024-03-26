@@ -18,6 +18,7 @@ export default defineConfig({
         intro_showcase: resolve(__dirname, "intro-showcase.html"),
         intro_match: resolve(__dirname, "intro-match.html"),
         outro: resolve(__dirname, "outro.html"),
+        showcase: resolve(__dirname, "showcase.html"),
       },
     },
   },

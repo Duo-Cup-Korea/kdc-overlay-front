@@ -1,0 +1,40 @@
+<script setup>
+import { computed, ref } from "vue";
+
+const props = defineProps({
+  value: Boolean,
+});
+
+// const opacity = computed(() => (props.value ? 1 : 0));
+
+/* ==========================================
+ *          Placeholder Constants
+ * ========================================== */
+const opacity = ref(0);
+setInterval(() => {
+  opacity.value = Math.round(Math.random());
+}, 2000);
+/* ========================================== */
+</script>
+
+<template>
+  <div class="master-star-component">
+    <div class="color" :style="{ opacity: opacity }"></div>
+  </div>
+</template>
+
+<style scoped>
+.master-star-component {
+  width: 33px;
+  height: 33px;
+  background-color: white;
+  mask-image: url("@/assets/star.svg");
+}
+
+.color {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s;
+  background-color: var(--color-star);
+}
+</style>

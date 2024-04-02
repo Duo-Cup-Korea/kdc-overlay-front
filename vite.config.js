@@ -19,6 +19,7 @@ export default defineConfig({
         intro_match: resolve(__dirname, "intro-match.html"),
         outro: resolve(__dirname, "outro.html"),
         showcase: resolve(__dirname, "showcase.html"),
+        ingame: resolve(__dirname, "ingame.html"),
       },
     },
   },

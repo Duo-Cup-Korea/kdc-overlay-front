@@ -3,10 +3,7 @@ import { computed, ref } from "vue";
 
 const props = defineProps({
   value: String,
-  color: {
-    type: String,
-    validator: (value) => ["red", "blue", "white"].includes(value),
-  },
+  color: String,
 });
 
 const masterRef = ref(null);
@@ -33,13 +30,13 @@ const txtsize = computed(() => {
 </script>
 
 <template>
-  <div class="master-team-acronym" ref="masterRef" :style="{ backgroundColor: bgcol }">
+  <div class="master-round-box" ref="masterRef" :style="{ backgroundColor: bgcol }">
     <span class="value" :style="{ fontSize: txtsize }">{{ value }}</span>
   </div>
 </template>
 
 <style scoped>
-.master-team-acronym {
+.master-round-box {
   border-radius: 999999px;
   display: flex;
   justify-content: center;

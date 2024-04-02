@@ -15,6 +15,9 @@
   --color-red-translucent: rgba(238, 83, 79, 0.5);
   --color-blue: rgba(65, 164, 245, 1);
   --color-blue-translucent: rgba(65, 164, 245, 0.5);
+  --color-yellow: rgba(231, 185, 66, 1);
+
+  --color-star: #e7b942;
 }
 
 body {

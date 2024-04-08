@@ -18,6 +18,14 @@
   --color-yellow: rgba(231, 185, 66, 1);
 
   --color-star: #e7b942;
+
+  --color-NM: #b9ffc4;
+  --color-HD: #fdffb1;
+  --color-HR: #ffcccc;
+  --color-DT: #f2ccff;
+  --color-FM: #9fc4e5;
+  --color-FcM: #fcab70;
+  --color-TB: #f0f0f0;
 }
 
 body {

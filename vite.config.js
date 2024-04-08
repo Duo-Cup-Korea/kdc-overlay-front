@@ -20,6 +20,7 @@ export default defineConfig({
         outro: resolve(__dirname, "outro.html"),
         showcase: resolve(__dirname, "showcase.html"),
         ingame: resolve(__dirname, "ingame.html"),
+        banpick: resolve(__dirname, "banpick.html"),
       },
     },
   },

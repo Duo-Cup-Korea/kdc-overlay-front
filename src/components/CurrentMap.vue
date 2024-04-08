@@ -6,7 +6,7 @@ import { ref } from "vue";
 /* ==========================================
  *          Placeholder Constants
  * ========================================== */
-const bgUrl = ref("https://assets.ppy.sh/beatmaps/1550315/covers/raw.jpg");
+const bgUrl = ref("https://assets.ppy.sh/beatmaps/1550315/covers/slimcover.jpg");
 /* ========================================== */
 </script>
 

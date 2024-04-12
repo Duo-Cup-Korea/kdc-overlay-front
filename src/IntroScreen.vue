@@ -1,43 +1,34 @@
 <script setup>
-import { computed, ref } from "vue";
+import { socket, useOverlayDataStore } from "@/socket.js";
+import { ref } from "vue";
 import IntroTopBar from "@/components/IntroScreen/TopBar.vue";
 import StreamTitle from "@/components/IntroScreen/StreamTitle.vue";
 import MusicPlayer from "@/components/IntroScreen/MusicPlayer.vue";
 import TeamPanel from "@/components/IntroScreen/TeamPanel.vue";
 
-const intro = ref(_intro);
-const showcase = ref(_showcase);
+const state = useOverlayDataStore();
+socket.off(); // remove any existing listeners (after a hot module replacement)
+state.bindEvents();
+state.connect();
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const title = "Swiss Round 2\nMappool Showcase";
-const pos = ref(0);
-setInterval(() => {
-  if (pos.value === 233) {
-    pos.value = 0;
-  } else {
-    pos.value += 1;
-  }
-}, 30);
-/* ========================================== */
+// eslint-disable-next-line no-undef
+const intro = ref(_intro);
+// eslint-disable-next-line no-undef
+const showcase = ref(_showcase);
 </script>
 
 <template>
   <intro-top-bar class="topBar" :show-countdown="intro"></intro-top-bar>
-  <stream-title v-if="showcase || !intro" class="title" :value="title"></stream-title>
+  <stream-title v-if="showcase || !intro" class="title"></stream-title>
   <div v-if="!showcase && intro" class="teams horizontal-box">
-    <team-panel></team-panel>
-    <team-panel></team-panel>
+    <team-panel
+      v-for="(team, i) in state.data.teams"
+      :team-index="i"
+      :team-data="team"
+      :key="i"
+    ></team-panel>
   </div>
-  <music-player
-    class="player"
-    cover="https://www.sonymusic.co.jp/adm_image/common/artist_image/70007000/70007781/jacket_image/279858__220_220_0.jpg?1710982175350"
-    title="さもなくば誰がやる"
-    artist="緑黄色社会"
-    :duration="233"
-    :position="pos"
-  ></music-player>
+  <music-player class="player"></music-player>
 </template>
 
 <style scoped>

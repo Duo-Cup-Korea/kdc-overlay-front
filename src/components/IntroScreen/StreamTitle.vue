@@ -1,15 +1,18 @@
 <script setup>
-import { computed } from "vue";
+import { useOverlayDataStore } from "@/socket.js";
+import { computed, ref } from "vue";
 
-const props = defineProps({
-  value: String,
-});
+const state = useOverlayDataStore();
 
+// eslint-disable-next-line no-undef
+const intro = ref(_intro);
+
+const title = computed(() => (state.data.stream_title ? state.data.stream_title : ""));
 const titleHTML = computed(() => {
-  if (!_intro) {
+  if (!intro.value) {
     return "Stream Ended.<br />Thank You for Watching!";
   }
-  return props.value.replace(/(?:\r\n|\r|\n)/g, "<br />");
+  return title.value.replace(/(?:\r\n|\r|\n)/g, "<br />");
 });
 </script>
 

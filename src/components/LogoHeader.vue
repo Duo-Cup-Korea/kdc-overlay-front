@@ -1,27 +1,29 @@
 <script setup>
+import { useOverlayDataStore } from "@/socket.js";
+import { computed, ref } from "vue";
 import logoUrl from "@/assets/logo.png";
-import { ref } from "vue";
+
+const state = useOverlayDataStore();
 
 const props = defineProps({
-  tournamentName: {
-    type: String,
-    default: "Duo Cup: Korea 2024",
-  },
-  text1: String,
-  text1Bold: {
-    type: Boolean,
-    default: false,
-  },
-  text2: String,
-  text2Bold: {
-    type: Boolean,
-    default: true,
-  },
   orientation: {
     type: String,
     validator: (value) => ["vertical", "horizontal"].includes(value),
   },
 });
+
+const tournamentName = ref("Duo Cup: Korea 2024");
+const text1 = computed(() => state.data.bracket);
+const text1Bold = ref(false);
+const text2 = computed(() => {
+  if (state.data.type === "showcase") {
+    return "Mappool Showcase";
+  } else if (state.data.type === "match") {
+    return "Match " + state.data.match_code;
+  }
+  return state.data.type;
+});
+const text2Bold = ref("true");
 
 const horizontal = ref(props.orientation === "horizontal");
 </script>

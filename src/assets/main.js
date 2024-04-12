@@ -1,3 +1,8 @@
+// "undefined" means the URL will be computed from the `window.location` object
+import { toRaw } from "vue";
+
+export const rootUrl = import.meta.env.PROD ? "" : "http://localhost:3000";
+
 export function secondsToMMSS(seconds) {
   return new Date(seconds * 1000).toISOString().substring(14, 19);
 }

@@ -1,17 +1,21 @@
 <script setup>
+import { computed } from "vue";
 import RoundBox from "@/components/RoundBox.vue";
 import PlayerBox from "@/components/IntroScreen/TeamPanel/PlayerBox.vue";
 import TeamInfo from "@/components/IntroScreen/TeamPanel/TeamInfo.vue";
+
+const props = defineProps({ teamIndex: Number, teamData: Object });
+
+const teamColor = computed(() => ["red", "blue"][props.teamIndex]);
 </script>
 
 <template>
   <div class="master-team-panel">
-    <round-box color="red" value="MZ" class="acronym"></round-box>
-    <div class="teamName">Team 쩌리들</div>
+    <round-box :color="teamColor" :value="teamData.acronym" class="acronym"></round-box>
+    <div class="teamName">{{ teamData.name }}</div>
     <div class="masterBox">
-      <player-box></player-box>
-      <player-box></player-box>
-      <team-info></team-info>
+      <player-box v-for="(player, i) in teamData.players" v-bind="player" :key="i"></player-box>
+      <team-info v-bind="teamData"></team-info>
     </div>
   </div>
 </template>

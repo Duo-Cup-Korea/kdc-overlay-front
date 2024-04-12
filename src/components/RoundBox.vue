@@ -32,6 +32,7 @@ const txtsize = computed(() => {
 <template>
   <div class="master-round-box" ref="masterRef" :style="{ backgroundColor: bgcol }">
     <span class="value" :style="{ fontSize: txtsize }">{{ value }}</span>
+    <!--TODO: replace with <slot>-->
   </div>
 </template>
 

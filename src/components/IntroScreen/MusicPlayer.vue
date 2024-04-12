@@ -1,16 +1,30 @@
 <script setup>
-import { secondsToMMSS } from "@/assets/main.js";
+import { rootUrl, secondsToMMSS } from "@/assets/main.js";
+import { useOverlayDataStore } from "@/socket.js";
 import { computed } from "vue";
 
-const props = defineProps({
-  cover: String,
-  title: String,
-  artist: String,
-  duration: Number,
-  position: Number,
+const state = useOverlayDataStore();
+
+const np = computed(() => {
+  if (!state.data.now_playing) {
+    return {
+      cover: "",
+      title: "",
+      artist: "",
+      time: 0,
+      length: 1,
+    };
+  }
+  return state.data.now_playing[state.data.now_playing.mode];
 });
 
-const positionFrac = computed(() => (props.position / props.duration) * 100);
+const cover = computed(() => (np.value.cover.startsWith("/") ? rootUrl : "") + np.value.cover);
+const title = computed(() => np.value.title);
+const artist = computed(() => np.value.artist);
+const duration = computed(() => np.value.length / 1000);
+const position = computed(() => np.value.time / 1000);
+
+const positionFrac = computed(() => (position.value / duration.value) * 100);
 const hideDuration = computed(() => positionFrac.value > 90);
 const hidePositionBar = computed(() => positionFrac.value < 10);
 </script>
@@ -49,17 +63,20 @@ const hidePositionBar = computed(() => positionFrac.value < 10);
 
 .contentBg {
   padding: 20px;
+  align-items: center;
 }
 
 .cover {
   width: 100px;
   height: 100px;
+  min-width: 100px;
+  min-height: 100px;
   background-position: center;
   background-size: cover;
 }
 
 .info {
-  padding: 20px;
+  padding-left: 20px;
 }
 
 .title {

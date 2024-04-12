@@ -1,15 +1,44 @@
-<script setup></script>
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  name: { type: String, default: "" },
+  acronym: { type: String, default: "" },
+  seed: { type: Number, default: 0 },
+  players: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
+});
+
+const avgRank = computed(() => {
+  let count = 0;
+  let sum = 0;
+
+  if (!props.players) {
+    return 0;
+  }
+
+  props.players.forEach((player) => {
+    count++;
+    sum += player.rank;
+  });
+  return Math.ceil(sum / count);
+});
+</script>
 
 <template>
   <div class="master-team-info">
     <div class="section">
       <div class="label">avg. rank</div>
-      <div class="value">#2,352</div>
+      <div class="value">#{{ avgRank.toLocaleString() }}</div>
     </div>
     <div class="line"></div>
     <div class="section">
       <div class="label">quals. seeding</div>
-      <div class="value">#3</div>
+      <div class="value">#{{ seed.toLocaleString() }}</div>
     </div>
   </div>
 </template>

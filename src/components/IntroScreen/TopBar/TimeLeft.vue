@@ -1,53 +1,50 @@
 <script setup>
-import { computed, ref } from "vue";
 import { secondsToMMSS } from "@/assets/main.js";
+import { useOverlayDataStore } from "@/socket.js";
+import { computed } from "vue";
 
-const props = defineProps({
-  value: {
-    type: [String, Number],
-    default: "00:00",
-  },
-});
-
-const masterRef = ref(null);
-const lineHeight = computed(() => {
-  if (masterRef.value) {
-    return masterRef.value.getBoundingClientRect().height;
-  } else {
-    return 0;
-  }
-});
+const state = useOverlayDataStore();
 
 const smaller = computed(() => {
-  if (!masterRef.value) {
-    return false;
-  }
-  return masterRef.value.innerHTML.length > 5;
+  return timeLeftString.value.length > 5;
 });
 
-const timeLeft = computed(() => {
-  if (typeof props.value === "string") {
-    return props.value;
-  } else {
-    if (props.value < 0) {
-      return "Starting Soon!";
-    }
-    return secondsToMMSS(props.value);
+const secondsLeft = computed(() => {
+  if (!state.data.schedule) {
+    return 0;
   }
+
+  return (new Date(state.data.schedule) - new Date()) / 1000;
+});
+
+const timeLeftString = computed(() => {
+  if (secondsLeft.value < 0) {
+    return "Starting Soon!";
+  }
+  return secondsToMMSS(secondsLeft.value);
 });
 </script>
 
 <template>
-  <div class="master-time-left" ref="masterRef">{{ timeLeft }}</div>
+  <div class="master-time-left">
+    <div class="data" :style="{ fontSize: smaller ? '56px' : '96px' }">
+      {{ timeLeftString }}
+    </div>
+  </div>
 </template>
 
 <style scoped>
 .master-time-left {
   width: 400px;
   height: 100%;
-  line-height: v-bind("lineHeight + 'px'");
   font-family: "Roboto", sans-serif;
   font-weight: 900;
-  font-size: v-bind("smaller ? '56px' : '96px'");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.data {
+  height: fit-content;
 }
 </style>

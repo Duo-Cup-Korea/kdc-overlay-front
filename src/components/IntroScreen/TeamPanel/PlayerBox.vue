@@ -1,20 +1,18 @@
 <script setup>
-import { ref } from "vue";
-
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const pfpUrl = ref("https://a.ppy.sh/6665667");
-/* ========================================== */
+defineProps({
+  id: { type: Number, default: 1 },
+  nick: { type: String, default: "" },
+  rank: { type: Number, default: 0 },
+});
 </script>
 
 <template>
   <div class="master-player-box">
-    <div class="pfp" :style="{ backgroundImage: `url(${pfpUrl})` }"></div>
+    <div class="pfp" :style="{ backgroundImage: `url(https://a.ppy.sh/${id})` }"></div>
     <div class="contentBg">
-      <div class="nick">yhsphd</div>
+      <div class="nick">{{ nick }}</div>
       <div class="line"></div>
-      <div class="rank roboto">#14,216</div>
+      <div class="rank roboto">#{{ rank.toLocaleString() }}</div>
     </div>
   </div>
 </template>

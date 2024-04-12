@@ -9,13 +9,9 @@ defineProps({
 
 <template>
   <div class="master-top-bar horizontal-box">
-    <logo-header
-      orientation="horizontal"
-      text1="Swiss Round 2"
-      text2="Mappool Showcase"
-    ></logo-header>
+    <logo-header orientation="horizontal"></logo-header>
     <div style="flex-grow: 1"></div>
-    <time-left v-if="showCountdown" class="timer" :value="-1"></time-left>
+    <time-left v-if="showCountdown" class="timer"></time-left>
   </div>
 </template>
 

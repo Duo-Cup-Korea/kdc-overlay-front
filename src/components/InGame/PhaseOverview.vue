@@ -32,11 +32,7 @@ const rows = ref(new Array(6));
           <div class="colorBox red"></div>
         </div>
         <div class="cell horizontal-box">
-          <round-box
-            class="code"
-            :value="`HD1`"
-            :color="`var(--color-blue-translucent)`"
-          ></round-box>
+          <round-box class="code" value="HD1" :color="`var(--color-blue-translucent)`"></round-box>
           <Transition name="titleAnim">
             <p v-show="idle" class="title">Korekara no Koto, Sorekara no Koto</p>
           </Transition>

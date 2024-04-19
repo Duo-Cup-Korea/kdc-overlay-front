@@ -19,13 +19,20 @@
 
   --color-star: #e7b942;
 
-  --color-NM: #b9ffc4;
-  --color-HD: #fdffb1;
-  --color-HR: #ffcccc;
-  --color-DT: #f2ccff;
-  --color-FM: #9fc4e5;
-  --color-FcM: #fcab70;
-  --color-TB: #f0f0f0;
+  --color-NM: rgba(185, 255, 196, 1);
+  --color-NM-translucent: rgba(63, 241, 124, 0.5);
+  --color-HD: rgba(253, 255, 177, 1);
+  --color-HD-translucent: rgba(218, 213, 106, 0.6);
+  --color-HR: rgba(255, 204, 204, 1);
+  --color-HR-translucent: rgba(238, 83, 79, 0.5);
+  --color-DT: rgba(242, 204, 255, 1);
+  --color-DT-translucent: rgba(153, 127, 255, 0.5);
+  --color-FM: rgba(159, 196, 229, 1);
+  --color-FM-translucent: rgba(65, 164, 245, 0.5);
+  --color-FcM: rgba(252, 171, 112, 1);
+  --color-FcM-translucent: rgba(252, 171, 112, 0.5);
+  --color-TB: rgba(240, 240, 240, 1);
+  --color-TB-translucent: rgba(240, 240, 240, 0.5);
 }
 
 body {

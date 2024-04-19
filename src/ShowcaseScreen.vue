@@ -1,23 +1,49 @@
 <script setup>
+import { socket, useOverlayDataStore } from "@/socket.js";
 import LogoHeader from "@/components/LogoHeader.vue";
 import CurrentMap from "@/components/CurrentMap.vue";
+import { computed, ref } from "vue";
+import DimensionInfo from "@/components/DimensionInfo.vue";
+
+const state = useOverlayDataStore();
+socket.off(); // remove any existing listeners (after a hot module replacement)
+state.bindEvents();
+state.connect();
+
+const totalMapCount = computed(() => state.data.mappool?.length);
+const mapIndex = computed(() => {
+  if (!state.data?.mappool?.length) {
+    return 0;
+  }
+
+  for (let i = 0; i < state.data.mappool.length; i++) {
+    if (state.data.now_playing.osu.code === state.data.mappool[i].code) {
+      return i + 1;
+    }
+  }
+
+  return 0;
+});
+
+const contentBg_ref = ref(null);
 </script>
 
 <template>
   <div class="master-showcase-screen">
     <div class="bg">
-      <div class="contentBg"></div>
+      <div class="contentBg" ref="contentBg_ref">
+        <dimension-info
+          class="dimensions"
+          name="Screen/osu!<br>Capture"
+          :source="contentBg_ref"
+        ></dimension-info>
+      </div>
       <div class="headerWrapper">
-        <logo-header
-          class="header"
-          orientation="vertical"
-          text1="Swiss Round 2"
-          text2="Mappool Showcase"
-        ></logo-header>
+        <logo-header class="header" orientation="vertical"></logo-header>
       </div>
       <div class="mapIndexWrapper">
-        <div class="mapIndex">
-          Map <b>{{ 3 }}</b> of {{ 10 }}
+        <div class="mapIndex" :style="{ opacity: mapIndex ? 1 : 0 }">
+          Map <b>{{ mapIndex }}</b> of {{ totalMapCount }}
         </div>
       </div>
       <div class="nowPlayingWrapper">
@@ -68,6 +94,7 @@ import CurrentMap from "@/components/CurrentMap.vue";
   bottom: 20px;
   left: 40px;
   font-size: 24px;
+  transition: opacity 1s;
 }
 
 .nowPlayingWrapper {
@@ -81,5 +108,11 @@ import CurrentMap from "@/components/CurrentMap.vue";
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.dimensions {
+  position: absolute;
+  left: 200px;
+  top: 80px;
 }
 </style>

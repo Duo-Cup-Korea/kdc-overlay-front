@@ -1,24 +1,34 @@
 <script setup>
-import { ref } from "vue";
+import { computed, nextTick, onUpdated, ref, watch } from "vue";
+import { useOverlayDataStore } from "@/socket.js";
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const rows = ref(new Array(6));
-/* ========================================== */
+const state = useOverlayDataStore();
+
+const chatData = computed(() => state.data.chat);
+const formatTime = (time) => {
+  const chatDate = new Date(time);
+  return `${chatDate.getHours().toString().padStart(2, "0")}:${chatDate.getMinutes().toString().padStart(2, "0")}:${chatDate.getSeconds().toString().padStart(2, "0")}`;
+};
+
+const masterElem = ref(null);
+
+const chatDataLen = ref(0);
+onUpdated(() => {
+  if (chatDataLen.value !== chatData.value.length) {
+    chatDataLen.value = chatData.value.length;
+    masterElem.value.lastElementChild.scrollIntoView({ behavior: "smooth" });
+  }
+});
 </script>
 
 <template>
-  <div class="master-chat-box">
+  <div class="master-chat-box" ref="masterElem">
     <!--Iteration-->
-    <div v-for="item in rows" :key="row">
+    <div v-for="item in chatData" :key="item">
       <div class="horizontal-box chat">
-        <div class="timestamp roboto">16:37:52</div>
-        <div class="nick" :style="{ color: `var(--color-yellow)` }">yhsphd</div>
-        <div class="cell message">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-          nulla pariatur. 한국어 테스트
-        </div>
+        <div class="timestamp roboto">{{ formatTime(item[0]) }}</div>
+        <div class="nick" :style="{ color: `var(--color-yellow)` }">{{ item[1] }}</div>
+        <div class="cell message">{{ item[2] }}</div>
         <!--<div class="message">Duis aute irure dolor in reprehenderit</div>-->
       </div>
     </div>

@@ -28,12 +28,17 @@ const clientRatio = computed(() => {
   return [];
 });
 
+const teamSize = computed(() => {
+  if (state.data?.lobby?.players) {
+    return Math.trunc(state.data?.lobby?.players.length / 2);
+  }
+  return 1;
+});
 const masterWidth = computed(() => (idle.value ? "1130px" : "1440px"));
 
 /* ==========================================
  *          Placeholder Constants
  * ========================================== */
-const teamSize = ref(2);
 const idle = ref(true);
 /* ========================================== */
 </script>

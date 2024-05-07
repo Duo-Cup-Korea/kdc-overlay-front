@@ -1,16 +1,28 @@
 <script setup>
-import { computed } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   name: String,
   source: HTMLDivElement,
 });
 
-const positionInfo = computed(() => {
-  if (!props.source) {
-    return { x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0 };
-  }
-  return props.source.getBoundingClientRect();
+const positionInfo = ref({
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+});
+
+onMounted(() => {
+  setInterval(() => {
+    if (props.source?.getBoundingClientRect) {
+      positionInfo.value = props.source.getBoundingClientRect();
+    }
+  }, 100);
 });
 </script>
 

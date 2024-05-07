@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import DimensionInfo from "@/components/DimensionInfo.vue";
 
 const props = defineProps({
   index: Number,
@@ -24,23 +25,11 @@ const computedWidth = computed(() => (positionInfo.value.height * props.ratio[0]
 
 <template>
   <div class="master-client-box" ref="masterElem" :style="{ width: `${computedWidth}px` }">
-    <div class="client-index">
-      osu!tourney<br />client <b>{{ index }}</b> ({{ ratio[0] }}:{{ ratio[1] }})
-    </div>
-    <div class="horizontal-box transform">
-      <div class="attributes">
-        <div>Position</div>
-        <div>Rotation</div>
-        <div>Size</div>
-        <div>Positional<br />Alignment</div>
-      </div>
-      <div class="values">
-        <div>{{ positionInfo.x }}px {{ positionInfo.y }}px</div>
-        <div>0.00º</div>
-        <div>{{ computedWidth }}px {{ positionInfo.height }}px</div>
-        <div>Top Left</div>
-      </div>
-    </div>
+    <dimension-info
+      class="posInfo"
+      :name="`osu!tourney client ${index}`"
+      :source="masterElem"
+    ></dimension-info>
   </div>
 </template>
 
@@ -56,23 +45,9 @@ const computedWidth = computed(() => (positionInfo.value.height * props.ratio[0]
   margin: 0 auto;
 }
 
-.client-index {
-  font-size: 32px;
-  margin: 60px 0 40px 60px;
-}
-
-.attributes {
-  text-align: end;
-  width: 30%;
-  font-weight: 500;
-}
-
-.values {
-  font-weight: 300;
-}
-
-.attributes > *,
-.values > * {
-  margin: 10px;
+.posInfo {
+  margin-top: 40px;
+  margin-left: 20px;
+  width: 400px;
 }
 </style>

@@ -1,23 +1,47 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import StarComponent from "@/components/InGame/TeamBar/StarComponent.vue";
 import RoundBox from "@/components/RoundBox.vue";
+import { useOverlayDataStore } from "@/socket.js";
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const _stars = ref(["", "", "", "", "", ""]);
-const teamName = ref("Never Gonna Give You Up");
-/* ========================================== */
+const state = useOverlayDataStore();
+
+const props = defineProps({
+  teamIndex: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const teamInfo = computed(() => state.data?.teams?.[props.teamIndex]);
+const stars = computed(() => {
+  if (!state.data?.lobby || !state.data.lobby.bo) {
+    return [];
+  }
+
+  const slots = (state.data.lobby.bo + 1) / 2;
+  const point = state.data.lobby.set_scores[props.teamIndex];
+
+  const stars = new Array(slots);
+
+  for (let i = 0; i < point; i++) {
+    stars[i] = true;
+  }
+  return stars;
+});
 </script>
 
 <template>
   <div class="master-team-bar horizontal-box">
-    <round-box color="red" value="MZ" class="acronym"></round-box>
-    <div class="teamName">{{ teamName }}</div>
+    <round-box
+      :color="teamIndex ? 'blue' : 'red'"
+      :value="teamInfo?.acronym"
+      class="acronym"
+    ></round-box>
+    <div class="teamName">{{ teamInfo?.name }}</div>
     <div :style="{ flexGrow: 1 }"></div>
     <div class="stars horizontal-box">
-      <star-component v-for="(item, i) in _stars" :key="i"></star-component>
+      <star-component v-for="(item, i) in stars" :value="item" :key="i"></star-component>
     </div>
   </div>
 </template>

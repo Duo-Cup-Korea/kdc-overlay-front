@@ -7,6 +7,12 @@ import ClientBox from "@/components/InGame/ClientBox.vue";
 import ScoreBar from "@/components/ScoreBar.vue";
 import PhaseOverview from "@/components/InGame/PhaseOverview.vue";
 import LobbyChatBox from "@/components/InGame/LobbyChatBox.vue";
+import { socket, useOverlayDataStore } from "@/socket.js";
+
+const state = useOverlayDataStore();
+socket.off(); // remove any existing listeners (after a hot module replacement)
+state.bindEvents();
+state.connect();
 
 const clientIndex = computed(() =>
   [...Array(teamSize.value * 2)].map((_, i) => {
@@ -77,8 +83,8 @@ const idle = ref(true);
         </div>
 
         <!--Team Acronym, Team Name, Team Points-->
-        <team-bar class="teamBar red"></team-bar>
-        <team-bar class="teamBar blue"></team-bar>
+        <team-bar class="teamBar red" :teamIndex="0"></team-bar>
+        <team-bar class="teamBar blue" :teamIndex="1"></team-bar>
       </div>
       <div class="masterBoxRightBorder"></div>
       <div class="subBox">

@@ -5,15 +5,15 @@ const props = defineProps({
   value: Boolean,
 });
 
-// const opacity = computed(() => (props.value ? 1 : 0));
+const opacity = computed(() => (props.value ? 1 : 0));
 
 /* ==========================================
  *          Placeholder Constants
  * ========================================== */
-const opacity = ref(0);
+/*const opacity = ref(0);
 setInterval(() => {
   opacity.value = Math.round(Math.random());
-}, 2000);
+}, 2000);*/
 /* ========================================== */
 </script>
 

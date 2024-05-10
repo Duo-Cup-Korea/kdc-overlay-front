@@ -11,7 +11,7 @@ const props = defineProps({
     type: String,
     default: "manual",
     validator(value) {
-      ["acronym", "code", "manual"].includes(value);
+      return ["acronym", "code", "manual"].includes(value);
     },
   },
   color: String,

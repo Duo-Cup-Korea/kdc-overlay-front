@@ -33,3 +33,12 @@ export function teamName2acronym(overlayData, name) {
   }
   return "";
 }
+
+export function getMappool(mappool, code) {
+  for (let i = 0; i < mappool.length; i++) {
+    if (mappool[i].code === code) {
+      return mappool[i];
+    }
+  }
+  return {};
+}

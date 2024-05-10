@@ -1,23 +1,61 @@
 <script setup>
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import RoundBox from "@/components/RoundBox.vue";
+import { useOverlayDataStore } from "@/socket.js";
+import { getMappool } from "@/assets/main.js";
+
+const state = useOverlayDataStore();
 
 defineProps({
   idle: Boolean,
 });
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const rows = ref(new Array(6));
-/* ========================================== */
+const progressData = computed(() => state.data.progress);
+const overviewData = computed(() => {
+  const data = [];
+
+  for (let i = 0; i < progressData.value?.phase; i++) {
+    const phase = [];
+    progressData.value.phases[i].order.forEach((pick) => {
+      if (pick.pick === 1) {
+        // pick === 1 means the entry is a pick info, not ban
+        phase.push(pick);
+      }
+    });
+    data.push(phase);
+  }
+
+  if (data.length >= 2) {
+    const maxLen = Math.max(data[0].length, data[1].length);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].length < maxLen) {
+        while (data[i].length !== maxLen) {
+          data[i].push({ code: "", team: 0, win: 0, pick: 0 });
+        }
+      }
+    }
+  }
+
+  return data;
+});
+const mappoolData = computed(() => state.data.mappool);
+
+const currentShownPhase = ref(0);
+onMounted(() => {
+  setInterval(() => {
+    const currPhase = progressData.value.phase;
+    currentShownPhase.value = (currentShownPhase.value + 1) % currPhase;
+  }, 10 * 1000);
+});
 </script>
 
 <template>
   <div class="master-phase-overview">
-    <div class="header row">
-      Phase <b>{{ 1 }}</b>
-    </div>
+    <Transition name="switchPhase" mode="out-in">
+      <div class="header row" :key="currentShownPhase">
+        Phase <b>{{ currentShownPhase + 1 }}</b>
+      </div>
+    </Transition>
     <div class="line-highlight"></div>
     <div class="horizontal-box row labels">
       <div class="cell fixed">Pick</div>
@@ -25,26 +63,62 @@ const rows = ref(new Array(6));
       <div class="cell fixed">Win</div>
     </div>
     <!--Iteration-->
-    <div v-for="item in rows" :key="row">
+    <div v-for="(item, i) in overviewData[currentShownPhase]" :key="i">
       <div class="line"></div>
-      <div class="horizontal-box row">
-        <div class="cell fixed">
-          <div class="colorBox red"></div>
-        </div>
-        <div class="cell horizontal-box">
-          <round-box class="code" value="HD1" :color="`var(--color-blue-translucent)`"></round-box>
-          <Transition name="titleAnim">
-            <p v-show="idle" class="title">Korekara no Koto, Sorekara no Koto</p>
-          </Transition>
-        </div>
-        <div class="cell fixed">
-          <div class="winCircle playing">
-            <svg class="absolute-center" width="12" height="14" viewBox="0 0 12 14" fill="none">
-              <path d="M11.7627 6.77808L0.512695 13.2733V0.282886L11.7627 6.77808Z" fill="white" />
-            </svg>
+      <Transition name="switchPhase" mode="out-in">
+        <div :key="currentShownPhase">
+          <div :style="{ opacity: item.code ? 1 : 0 }" class="horizontal-box row">
+            <div class="cell fixed">
+              <div
+                :class="{
+                  colorBox: 1,
+                  red: item.team === 0,
+                  blue: item.team === 1,
+                }"
+              ></div>
+            </div>
+            <div class="cell horizontal-box">
+              <round-box class="code" :value="item.code" mode="code"></round-box>
+              <Transition name="titleAnim">
+                <p v-show="idle" class="title">
+                  {{
+                    (() => {
+                      const map = getMappool(mappoolData, item.code);
+                      return `${map.artist} - ${map.title}`;
+                    })()
+                  }}
+                </p>
+              </Transition>
+            </div>
+            <div class="cell fixed">
+              <div
+                :class="{
+                  winCircle: 1,
+                  playing:
+                    item.win === -1 &&
+                    (i === 0 || overviewData[currentShownPhase][i - 1].win !== -1),
+                  red: item.win === 0,
+                  blue: item.win === 1,
+                }"
+              >
+                <svg
+                  v-if="item.win === -1"
+                  class="absolute-center"
+                  width="12"
+                  height="14"
+                  viewBox="0 0 12 14"
+                  fill="none"
+                >
+                  <path
+                    d="M11.7627 6.77808L0.512695 13.2733V0.282886L11.7627 6.77808Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </Transition>
     </div>
     <!---->
     <div class="line-highlight"></div>
@@ -133,6 +207,14 @@ const rows = ref(new Array(6));
     opacity: 1;
     flex-grow: 1;
   }
+}
+
+.switchPhase-enter-active {
+  animation: fadeIn 500ms;
+}
+
+.switchPhase-leave-active {
+  animation: fadeIn 500ms reverse;
 }
 
 .winCircle {

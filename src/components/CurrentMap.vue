@@ -1,9 +1,9 @@
 <script setup>
 import { useOverlayDataStore } from "@/socket.js";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { Carousel, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import { secondsToMMSS, teamName2acronym, teamName2color } from "../assets/main.js";
+import { secondsToMMSS } from "../assets/main.js";
 import RoundBox from "@/components/RoundBox.vue";
 
 const state = useOverlayDataStore();
@@ -22,11 +22,13 @@ const currentMapPicker = computed(() => {
   }
 
   const phases = state.data?.progress.phases;
+  const teams = state.data?.teams;
   for (let i = 0; i < phases.length; i++) {
     for (let j = 0; j < phases[i].order.length; j++) {
       if (phases[i].order[j].code === code) {
-        data[0] = phases[i].order[j].team;
-        data[1] = teamName2acronym(state.data, phases[i].order[j].team);
+        const team = teams[phases[i].order[j].team];
+        data[0] = team.name;
+        data[1] = team.acronym;
         return data;
       }
     }

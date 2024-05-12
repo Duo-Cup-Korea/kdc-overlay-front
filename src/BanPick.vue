@@ -3,6 +3,12 @@ import LogoHeader from "@/components/LogoHeader.vue";
 import BanPickVisual from "@/components/BanPick/BanPickVisual.vue";
 import MapList from "@/components/BanPick/MapList.vue";
 import ChatBox from "@/components/ChatBox.vue";
+import { socket, useOverlayDataStore } from "@/socket.js";
+
+const state = useOverlayDataStore();
+socket.off(); // remove any existing listeners (after a hot module replacement)
+state.bindEvents();
+state.connect();
 </script>
 
 <template>

@@ -1,35 +1,20 @@
 <script setup>
 import { computed, ref } from "vue";
+import { useOverlayDataStore } from "@/socket.js";
+import { splitCode } from "@/assets/main.js";
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const maps = ref([
-  ["NM", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["NM", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["NM", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["NM", 4, "Shironaga Star Jet -aquamarine mix-"],
-  ["NM", 5, "Shironaga Star Jet -aquamarine mix-"],
-  ["NM", 6, "Shironaga Star Jet -aquamarine mix-"],
-  ["HD", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["HD", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["HD", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["HR", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["HR", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["HR", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["DT", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["DT", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["DT", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["DT", 4, "Shironaga Star Jet -aquamarine mix-"],
-  ["FM", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["FM", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["FM", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["FcM", 1, "Shironaga Star Jet -aquamarine mix-"],
-  ["FcM", 2, "Shironaga Star Jet -aquamarine mix-"],
-  ["FcM", 3, "Shironaga Star Jet -aquamarine mix-"],
-  ["TB", 1, "Shironaga Star Jet -aquamarine mix-"],
-]);
-/* ========================================== */
+const state = useOverlayDataStore();
+
+const mappool = computed(() => state.data?.mappool);
+const maps = computed(() => {
+  // [mod, index, title]
+  const data = [];
+  mappool.value?.forEach((map) => {
+    data.push([...splitCode(map.code), map.title]);
+  });
+  return data;
+});
+
 const columns = computed(() => {
   let columns = [];
   let column = [];
@@ -69,6 +54,14 @@ const columns = computed(() => {
 
   return columns;
 });
+
+const progress = computed(() => state.data.progress);
+const unavailableMaps = computed(() =>
+  progress.value.phases
+    .map((x) => x.order)
+    .flat(1)
+    .map((x) => x.code)
+);
 </script>
 
 <template>
@@ -80,7 +73,12 @@ const columns = computed(() => {
         :key="j"
         :style="{ flexGrow: `${map[0] === 'TB' ? 1 : 0}` }"
       >
-        <div class="map horizontal-box">
+        <div
+          class="map horizontal-box"
+          :class="{
+            unavailable: unavailableMaps.includes(map[0] + (map[0] === 'TB' ? '' : map[1])),
+          }"
+        >
           <div class="code roboto" :style="{ color: `var(--color-${map[0]}` }">
             {{ map[0] + (map[0] === "TB" ? "" : map[1]) }}
           </div>
@@ -116,11 +114,17 @@ const columns = computed(() => {
 .map {
   height: 40px;
   align-items: center;
+  transition: opacity 0.5s;
+}
+
+.map.unavailable {
+  opacity: 0.5;
 }
 
 .code {
   font-size: 36px;
   width: 100px;
+  min-width: 100px;
   text-align: right;
 }
 

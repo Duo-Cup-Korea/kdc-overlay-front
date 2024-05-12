@@ -52,3 +52,9 @@ export function rankDuplicate(arr) {
   const rank = new Map(sorted.map((x, i) => [x, i + 1]));
   return arr.map((x) => rank.get(x));
 }
+
+export function splitCode(code) {
+  const mod = code.match(/[a-zA-Z]+/g)[0];
+  const index = code.match(/\d+/g);
+  return [mod, index !== "" ? parseInt(index) : 1];
+}

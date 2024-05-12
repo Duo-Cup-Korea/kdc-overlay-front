@@ -6,6 +6,10 @@ export function secondsToMMSS(seconds) {
   return new Date(seconds * 1000).toISOString().substring(14, 19);
 }
 
+export function clamp(number, min, max) {
+  return Math.max(min, Math.min(number, max));
+}
+
 export function teamName2color(overlayData, mode, name) {
   let names;
 
@@ -41,4 +45,10 @@ export function getMappool(mappool, code) {
     }
   }
   return {};
+}
+
+export function rankDuplicate(arr) {
+  const sorted = [...new Set(arr)].sort((a, b) => b - a);
+  const rank = new Map(sorted.map((x, i) => [x, i + 1]));
+  return arr.map((x) => rank.get(x));
 }

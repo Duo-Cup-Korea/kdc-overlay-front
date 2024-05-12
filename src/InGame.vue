@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import LogoHeader from "@/components/LogoHeader.vue";
 import TeamBar from "@/components/InGame/TeamBar.vue";
 import CurrentMap from "@/components/CurrentMap.vue";
 import ClientBox from "@/components/InGame/ClientBox.vue";
-import ScoreBar from "@/components/ScoreBar.vue";
+import ScoreBar from "@/components/InGame/ScoreBar.vue";
 import PhaseOverview from "@/components/InGame/PhaseOverview.vue";
 import LobbyChatBox from "@/components/InGame/LobbyChatBox.vue";
 import { socket, useOverlayDataStore } from "@/socket.js";
@@ -36,11 +36,24 @@ const teamSize = computed(() => {
 });
 const masterWidth = computed(() => (idle.value ? "1130px" : "1440px"));
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const idle = ref(true);
-/* ========================================== */
+const idle = ref(false);
+const tourneyState = computed(() => state.data?.progress?.state);
+watch(tourneyState, (newState, oldState) => {
+  if (newState === 1) {
+    // idle
+    idle.value = true;
+  } else if (newState === 3) {
+    // playing
+    idle.value = false;
+  }
+
+  if (oldState === 3 && newState === 4) {
+    // playing -> result
+    setTimeout(() => {
+      idle.value = true;
+    }, 10000);
+  }
+});
 </script>
 
 <template>
@@ -83,7 +96,7 @@ const idle = ref(true);
         <!--ScoreBar Region-->
         <div class="scoreBarBgWrapper">
           <div class="scoreBarBg" :style="{ opacity: idle ? 0 : 1 }">
-            <score-bar></score-bar>
+            <score-bar :team-size="teamSize"></score-bar>
           </div>
         </div>
 

@@ -2,6 +2,10 @@
 import TeamBox from "@/components/BanPick/BanPickVisual/TeamBox.vue";
 import DecisionBox from "@/components/BanPick/BanPickVisual/DecisionBox.vue";
 import { computed, ref } from "vue";
+import { useOverlayDataStore } from "@/socket.js";
+import { getMappool } from "@/assets/main.js";
+
+const state = useOverlayDataStore();
 
 const cellData = computed(() => {
   let insertOrder;
@@ -36,6 +40,8 @@ const cellData = computed(() => {
   } else if (bo.value === 13 && phase.value === 1) {
     insertOrder = [0, 1, 2, 3, 4, 5, 7, 8, 10, 11];
     disableOrder = [];
+  } else {
+    return [];
   }
 
   for (let i = 0; i < insertOrder.length; i++) {
@@ -65,21 +71,15 @@ const cellData = computed(() => {
   return data;
 });
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
-const bo = ref(11);
-const phase = ref(2);
-const firstPick = ref("red");
-const banPickData = ref([
-  ["ban", "blue", "NM1", 1012634],
-  ["ban", "red", "NM1", 1012634],
-  ["pick", "red", "NM1", 1012634],
-  ["pick", "blue", "NM1", 1012634],
-  ["pick", "blue", "NM1", 1012634],
-  ["pick", "red", "NM1", 1012634],
-]);
-/* ========================================== */
+const bo = computed(() => state.data?.bo);
+const phase = computed(() => state.data?.progress.phase);
+const currentPhase = computed(() => state.data?.progress?.phases[phase.value - 1]);
+const firstPick = computed(() => currentPhase.value?.first_pick);
+const banPickData = computed(() =>
+  currentPhase.value.order
+    .filter((pick) => pick.code)
+    .map((x) => [x.pick, x.team, x.code, getMappool(state.data.mappool, x.code).mapset_id])
+);
 </script>
 
 <template>
@@ -88,34 +88,34 @@ const banPickData = ref([
     <div>
       <div class="teamBox red">
         <div class="content">
-          <team-box></team-box>
+          <team-box :team="state.data.teams[0]"></team-box>
         </div>
       </div>
       <div class="teamBox blue">
         <div class="content">
-          <team-box></team-box>
+          <team-box :team="state.data.teams[1]"></team-box>
         </div>
       </div>
     </div>
     <!--BanBox Area-->
     <div class="mapBox banBox">
       <div class="horizontal-box mapsRow">
-        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick === 'blue' ? 0 : 1 }">
+        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick ? 0 : 1 }">
           <div>Ban</div>
         </div>
         <decision-box
-          v-for="i in firstPick === 'blue' ? [0, 2] : [1, 3]"
+          v-for="i in firstPick ? [0, 2] : [1, 3]"
           :index="i"
           v-bind="cellData[i]"
           :key="i"
         ></decision-box>
       </div>
       <div class="horizontal-box mapsRow">
-        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick === 'blue' ? 1 : 0 }">
+        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick ? 1 : 0 }">
           <div>BAN</div>
         </div>
         <decision-box
-          v-for="i in firstPick === 'blue' ? [1, 3] : [0, 2]"
+          v-for="i in firstPick ? [1, 3] : [0, 2]"
           :index="i"
           v-bind="cellData[i]"
           :key="i"
@@ -126,22 +126,22 @@ const banPickData = ref([
     <!--PickBox Area-->
     <div class="mapBox pickBox">
       <div class="horizontal-box mapsRow">
-        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick === 'blue' ? 1 : 0 }">
+        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick ? 1 : 0 }">
           <div>Pick</div>
         </div>
         <decision-box
-          v-for="i in firstPick === 'blue' ? [5, 7, 9, 11] : [4, 6, 8, 10]"
+          v-for="i in firstPick ? [5, 7, 9, 11] : [4, 6, 8, 10]"
           :index="i"
           v-bind="cellData[i]"
           :key="i"
         ></decision-box>
       </div>
       <div class="horizontal-box mapsRow">
-        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick === 'blue' ? 0 : 1 }">
+        <div class="decisionBoxOffset" :style="{ flexGrow: firstPick ? 0 : 1 }">
           <div>Pick</div>
         </div>
         <decision-box
-          v-for="i in firstPick === 'blue' ? [4, 6, 8, 10] : [5, 7, 9, 11]"
+          v-for="i in firstPick ? [4, 6, 8, 10] : [5, 7, 9, 11]"
           :index="i"
           v-bind="cellData[i]"
           :key="i"

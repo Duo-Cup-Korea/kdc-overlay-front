@@ -14,13 +14,8 @@ state.connect();
 <template>
   <div class="master-ban-pick">
     <div class="topBar horizontal-box">
-      <logo-header
-        class="header"
-        orientation="horizontal"
-        text1="Swiss Round 2"
-        text2="Match 8"
-      ></logo-header>
-      <div class="desc"><b>Ban/Pick</b><br />Phase {{ 1 }}</div>
+      <logo-header class="header" orientation="horizontal"></logo-header>
+      <div class="desc"><b>Ban/Pick</b><br />Phase {{ state.data?.progress?.phase }}</div>
     </div>
     <div class="line-highlight"></div>
     <ban-pick-visual class="visual"></ban-pick-visual>

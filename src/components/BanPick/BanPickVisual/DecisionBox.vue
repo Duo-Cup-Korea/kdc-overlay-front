@@ -1,8 +1,8 @@
 <script setup>
 defineProps({
   visibility: Number,
-  pickBan: String,
-  team: String,
+  pickBan: Number, // 0-ban, 1-pick
+  team: Number, // 0-red, 1-blue
   code: String,
   mapSetId: Number,
 });
@@ -26,9 +26,9 @@ defineProps({
           <line x1="0" y1="150" x2="200" y2="0"></line>
         </svg>
         <div v-if="visibility === 1" class="loader absolute-center"></div>
-        <div class="content absolute-center">
+        <div v-if="visibility === 2" class="content absolute-center">
           <div class="code">{{ code }}</div>
-          <div class="pickBan">{{ typeof pickBan === "string" ? pickBan.toUpperCase() : "" }}</div>
+          <div class="pickBan">{{ pickBan ? "PICK" : "BAN" }}</div>
         </div>
       </div>
     </transition>

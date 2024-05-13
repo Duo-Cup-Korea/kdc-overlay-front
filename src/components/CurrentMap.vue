@@ -48,7 +48,7 @@ const activePages = computed(() => {
   <div class="master-current-map" :style="{ backgroundImage: `url(${bgUrl})` }">
     <div class="bgDim absolute-center"></div>
     <div class="carouselWrapper">
-      <Carousel :autoplay="7500" :wrap-around="true">
+      <Carousel :autoplay="10000" :wrap-around="true">
         <Slide v-for="slide in activePages" :key="slide">
           <div class="carousel__item metadata" v-if="slide === 'metadata'">
             CS&nbsp;<b>{{ np?.stats.modified.cs.toFixed(1) }}</b

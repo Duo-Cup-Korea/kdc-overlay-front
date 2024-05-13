@@ -1,7 +1,7 @@
 <script setup>
 import { rootUrl, secondsToMMSS } from "@/assets/main.js";
 import { useOverlayDataStore } from "@/socket.js";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 const state = useOverlayDataStore();
 
@@ -18,11 +18,15 @@ const np = computed(() => {
   return state.data.now_playing[state.data.now_playing.mode];
 });
 
-const cover = computed(() => (np.value.cover.startsWith("/") ? rootUrl : "") + np.value.cover);
+const coverUrl = ref("");
+const cover = computed(() => np.value.cover);
 const title = computed(() => np.value.title);
 const artist = computed(() => np.value.artist);
 const duration = computed(() => np.value.length / 1000);
 const position = computed(() => np.value.time / 1000);
+watch([cover, title], ([newCover]) => {
+  coverUrl.value = (newCover?.startsWith("/") ? rootUrl : "") + newCover + "?" + Math.random();
+});
 
 const positionFrac = computed(() => (position.value / duration.value) * 100);
 const hideDuration = computed(() => positionFrac.value > 90);
@@ -33,7 +37,7 @@ const hidePositionBar = computed(() => positionFrac.value < 10);
   <div class="master-music-player">
     <div class="line-highlight"></div>
     <div class="contentBg horizontal-box">
-      <div class="cover" :style="{ backgroundImage: `url('${cover}')` }"></div>
+      <div class="cover" :style="{ backgroundImage: `url('${coverUrl}')` }"></div>
       <div class="info">
         <div class="title">{{ title }}</div>
         <div class="artist">{{ artist }}</div>

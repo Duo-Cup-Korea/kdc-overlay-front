@@ -1,7 +1,7 @@
 <script setup>
 import { secondsToMMSS } from "@/assets/main.js";
 import { useOverlayDataStore } from "@/socket.js";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const state = useOverlayDataStore();
 
@@ -9,19 +9,19 @@ const smaller = computed(() => {
   return timeLeftString.value.length > 5;
 });
 
-const secondsLeft = computed(() => {
-  if (!state.data.schedule) {
-    return 0;
-  }
-
-  return (new Date(state.data.schedule) - new Date()) / 1000;
-});
+const secondsLeft = ref(0);
 
 const timeLeftString = computed(() => {
   if (secondsLeft.value < 0) {
     return "Starting Soon!";
   }
   return secondsToMMSS(secondsLeft.value);
+});
+
+onMounted(() => {
+  setInterval(() => {
+    secondsLeft.value = (new Date(state.data.schedule) - new Date()) / 1000;
+  }, 1000);
 });
 </script>
 

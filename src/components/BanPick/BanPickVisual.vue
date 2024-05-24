@@ -86,14 +86,13 @@ const banPickData = computed(() =>
   <div class="master-ban-pick-visual horizontal-box">
     <!--TeamBox Area-->
     <div>
-      <div class="teamBox red">
+      <div
+        v-for="(team, i) in state.data.teams"
+        :class="{ teamBox: true, red: !i, blue: i }"
+        :key="i"
+      >
         <div class="content">
-          <team-box :team="state.data.teams[0]"></team-box>
-        </div>
-      </div>
-      <div class="teamBox blue">
-        <div class="content">
-          <team-box :team="state.data.teams[1]"></team-box>
+          <team-box :team="team"></team-box>
         </div>
       </div>
     </div>

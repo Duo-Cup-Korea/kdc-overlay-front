@@ -62,7 +62,7 @@ const txtCol = computed(() => {
 
 const txtSize = computed(() => {
   if (masterRef.value) {
-    return masterRef.value.getBoundingClientRect().height * 0.64 + "px";
+    return masterRef.value.getBoundingClientRect().height * 0.5 + "px";
   } else {
     return "0px";
   }

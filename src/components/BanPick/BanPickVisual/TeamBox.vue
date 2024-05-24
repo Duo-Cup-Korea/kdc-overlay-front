@@ -2,27 +2,33 @@
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide } from "vue3-carousel";
 import RoundBox from "@/components/RoundBox.vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   team: Object,
 });
 
-/* ==========================================
- *          Placeholder Constants
- * ========================================== */
 const players = computed(() =>
   props.team.players.map((x) => ({
     id: x.id,
     nick: x.nick,
   }))
 );
-/* ========================================== */
+
+const carousel = ref();
+
+function advancePage() {
+  carousel.value.next();
+}
+
+defineExpose({
+  advancePage, // Expose function to advance page so that the parent component can synchronize multiple carousels
+});
 </script>
 
 <template>
   <div class="master-team-box">
-    <Carousel :autoplay="3000" :wrap-around="true">
+    <Carousel ref="carousel" :wrap-around="true">
       <Slide v-for="slide in 1" :key="slide">
         <div class="carousel__item">
           <div class="item horizontal-box">

@@ -1,7 +1,7 @@
 <script setup>
 import TeamBox from "@/components/BanPick/BanPickVisual/TeamBox.vue";
 import DecisionBox from "@/components/BanPick/BanPickVisual/DecisionBox.vue";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useOverlayDataStore } from "@/socket.js";
 import { getMappool } from "@/assets/main.js";
 
@@ -80,6 +80,15 @@ const banPickData = computed(() =>
     .filter((pick) => pick.code)
     .map((x) => [x.pick, x.team, x.code, getMappool(state.data.mappool, x.code).mapset_id])
 );
+
+const teamBoxes = ref([]);
+onMounted(() => {
+  setInterval(() => {
+    teamBoxes.value.forEach((teamBox) => {
+      teamBox.advancePage();
+    });
+  }, 10000); // Synchronize two carousels
+});
 </script>
 
 <template>
@@ -92,7 +101,7 @@ const banPickData = computed(() =>
         :key="i"
       >
         <div class="content">
-          <team-box :team="team"></team-box>
+          <team-box :team="team" ref="teamBoxes"></team-box>
         </div>
       </div>
     </div>

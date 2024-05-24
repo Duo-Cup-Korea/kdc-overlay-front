@@ -10,6 +10,7 @@ const props = defineProps({
       return value.length === 2;
     },
   },
+  teamSize: Number,
 });
 
 const masterElem = ref(null);
@@ -24,7 +25,13 @@ const computedWidth = computed(() => (positionInfo.value.height * props.ratio[0]
 </script>
 
 <template>
-  <div class="master-client-box" ref="masterElem" :style="{ width: `${computedWidth}px` }">
+  <!-- Not rendering client 1, 3 if teamSize isn't 2 (KDC24) -->
+  <div
+    v-if="teamSize === 2 || index % 2 === 0"
+    class="master-client-box"
+    ref="masterElem"
+    :style="{ width: `${computedWidth}px` }"
+  >
     <dimension-info
       class="posInfo"
       :name="`osu!tourney client ${index}`"

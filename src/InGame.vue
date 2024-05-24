@@ -15,28 +15,28 @@ state.bindEvents();
 state.connect();
 
 const clientIndex = computed(() =>
-  [...Array(teamSize.value * 2)].map((_, i) => {
+  [...Array(clientTeamSize.value * 2)].map((_, i) => {
     return i;
   })
 );
 const clientRatio = computed(() => {
-  if (teamSize.value === 1) {
-    return [16, 9];
-  } else if (teamSize.value === 2) {
-    return [4, 3];
+  if (clientTeamSize.value === 2) {
+    return [4 * aspect.value, 3];
   }
-  return [];
+  return [4, 3];
 });
 
-const teamSize = computed(() => {
+const aspect = computed(() => state.data?.lobby?.aspect);
+const clientTeamSize = computed(() => {
   if (state.data?.lobby?.players) {
     return Math.trunc(state.data?.lobby?.players.length / 2);
   }
   return 1;
 });
-const masterWidth = computed(() => (idle.value ? "1130px" : "1440px"));
+const teamSize = computed(() => aspect.value === 1 ? 2: 1);
 
 const idle = ref(false);
+const masterWidth = computed(() => (idle.value ? "1130px" : "1440px"));
 const tourneyState = computed(() => state.data?.progress?.state);
 watch(tourneyState, (newState, oldState) => {
   if (newState === 1) {
@@ -67,10 +67,11 @@ watch(tourneyState, (newState, oldState) => {
           </div>
           <div class="clientBg horizontal-box">
             <client-box
-              v-for="item in clientIndex.slice(0, teamSize)"
+              v-for="item in clientIndex.slice(0, clientTeamSize)"
               :key="item"
               :index="item"
               :ratio="clientRatio"
+              :teamSize="teamSize"
             ></client-box>
           </div>
         </div>
@@ -82,10 +83,11 @@ watch(tourneyState, (newState, oldState) => {
           </div>
           <div class="clientBg horizontal-box">
             <client-box
-              v-for="item in clientIndex.slice(teamSize)"
+              v-for="item in clientIndex.slice(clientTeamSize)"
               :key="item"
               :index="item"
               :ratio="clientRatio"
+              :teamSize="teamSize"
             ></client-box>
           </div>
         </div>
@@ -96,7 +98,7 @@ watch(tourneyState, (newState, oldState) => {
         <!--ScoreBar Region-->
         <div class="scoreBarBgWrapper">
           <div class="scoreBarBg" :style="{ opacity: idle ? 0 : 1 }">
-            <score-bar :team-size="teamSize"></score-bar>
+            <score-bar :teamSize="teamSize"></score-bar>
           </div>
         </div>
 

@@ -2,7 +2,7 @@
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide } from "vue3-carousel";
 import RoundBox from "@/components/RoundBox.vue";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
   team: Object,

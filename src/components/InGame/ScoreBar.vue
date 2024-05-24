@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useOverlayDataStore } from "@/socket.js";
 import { clamp, rankDuplicate } from "@/assets/main.js";
 import PlayerScore from "@/components/InGame/ScoreBar/PlayerScore.vue";

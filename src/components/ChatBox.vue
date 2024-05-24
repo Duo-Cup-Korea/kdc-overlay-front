@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onUpdated, ref, watch } from "vue";
+import { computed, onUpdated, ref } from "vue";
 import { useOverlayDataStore } from "@/socket.js";
 
 const state = useOverlayDataStore();

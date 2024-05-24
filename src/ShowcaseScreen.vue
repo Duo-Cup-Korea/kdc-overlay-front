@@ -2,7 +2,7 @@
 import { socket, useOverlayDataStore } from "@/socket.js";
 import LogoHeader from "@/components/LogoHeader.vue";
 import CurrentMap from "@/components/CurrentMap.vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import DimensionInfo from "@/components/DimensionInfo.vue";
 import MappoolView from "@/components/MappoolView.vue";
 

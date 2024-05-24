@@ -1,7 +1,7 @@
 <script setup>
 import TeamBox from "@/components/BanPick/BanPickVisual/TeamBox.vue";
 import DecisionBox from "@/components/BanPick/BanPickVisual/DecisionBox.vue";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useOverlayDataStore } from "@/socket.js";
 import { getMappool } from "@/assets/main.js";
 

@@ -19,7 +19,7 @@ const innerTeamRank = computed(() => {
     const data = [[], []];
 
     for (let i = 0; i < props.teamSize; i++) {
-      if (lobbyData.value.players[2 * i].score >= lobbyData.value.players[2 * i + 1].score) {
+      if (lobbyData.value.players[2 * i]?.score >= lobbyData.value.players[2 * i + 1]?.score) {
         data[i] = [0, 1];
       } else {
         data[i] = [1, 0];

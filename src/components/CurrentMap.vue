@@ -86,8 +86,8 @@ const activePages = computed(() => {
 }
 
 .bgDim {
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
 }
 

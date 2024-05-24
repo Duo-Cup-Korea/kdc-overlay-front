@@ -33,13 +33,13 @@ defineExpose({
         <div class="carousel__item">
           <div class="item horizontal-box">
             <round-box :value="team.acronym" class="acronym"></round-box>
-            <p class="teamName">{{ team.name }}</p>
+            <div class="teamName">{{ team.name }}</div>
           </div>
         </div>
       </Slide>
       <Slide v-for="slide in 1" :key="slide">
         <div class="carousel__item">
-          <div class="player horizontal-box" v-for="(player, i) in players" :key="i">
+          <div class="item player horizontal-box" v-for="(player, i) in players" :key="i">
             <div
               class="pfp"
               :style="{ backgroundImage: `url(https://a.ppy.sh/${player.id})` }"
@@ -63,6 +63,7 @@ defineExpose({
 }
 
 .item {
+  width: 350px;
   align-items: center;
 }
 
@@ -82,7 +83,6 @@ defineExpose({
 
 .player {
   margin: 16px;
-  width: 350px;
   height: 48px;
 }
 

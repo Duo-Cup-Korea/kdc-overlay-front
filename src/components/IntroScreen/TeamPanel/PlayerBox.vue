@@ -10,7 +10,7 @@ defineProps({
   <div class="master-player-box">
     <div class="pfp" :style="{ backgroundImage: `url(https://a.ppy.sh/${id})` }"></div>
     <div class="contentBg">
-      <div class="nick">{{ nick }}</div>
+      <div :class="{ nick: 1, nickLarge: nick.length > 10 }">{{ nick }}</div>
       <div class="line"></div>
       <div class="rank roboto">#{{ rank.toLocaleString() }}</div>
     </div>
@@ -46,6 +46,10 @@ defineProps({
 .nick {
   font-size: 32px;
   font-weight: bold;
+}
+
+.nickLarge {
+  font-size: 24px;
 }
 
 .line {

@@ -35,7 +35,8 @@ const titleHTML = computed(() => {
   position: absolute;
   left: 128px;
   bottom: 128px;
-  white-space: nowrap;
+  width: 1000px;
+  white-space: break-spaces;
   font-size: 64px;
   font-weight: bold;
 }

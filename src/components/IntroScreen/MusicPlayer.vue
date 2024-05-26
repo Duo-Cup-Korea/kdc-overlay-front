@@ -23,7 +23,7 @@ const cover = computed(() => np.value.cover);
 const title = computed(() => np.value.title);
 const artist = computed(() => np.value.artist);
 const duration = computed(() => np.value.length / 1000);
-const position = computed(() => np.value.time / 1000);
+const position = computed(() => np.value?.time / 1000);
 watch([cover, title], ([newCover]) => {
   coverUrl.value = (newCover?.startsWith("/") ? rootUrl : "") + newCover + "?" + Math.random();
 });

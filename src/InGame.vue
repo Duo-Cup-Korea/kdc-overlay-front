@@ -28,12 +28,16 @@ const clientRatio = computed(() => {
 
 const aspect = computed(() => state.data?.lobby?.aspect);
 const clientTeamSize = computed(() => {
+  // Half of the total clients count
   if (state.data?.lobby?.players) {
     return Math.trunc(state.data?.lobby?.players.length / 2);
   }
   return 1;
 });
-const teamSize = computed(() => aspect.value === 1 ? 2: 1);
+// In KDC24, teamSize is not determined by client count, but by the aspect.
+// Because for the spectating slots to be open in widescreen in 1vs1,
+// we have to use the aspect feature of the tournament client, which is only available in 2vs2 mode.
+const teamSize = computed(() => (aspect.value === 1 ? 2 : 1));
 
 const idle = ref(false);
 const masterWidth = computed(() => (idle.value ? "1130px" : "1440px"));

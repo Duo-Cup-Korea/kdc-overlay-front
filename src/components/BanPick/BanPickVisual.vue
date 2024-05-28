@@ -81,6 +81,21 @@ const banPickData = computed(() =>
     .map((x) => [x.pick, x.team, x.code, getMappool(state.data.mappool, x.code).mapset_id])
 );
 
+const pointsFromSheet = computed(() => {
+  const data = [0, 0];
+  const phases = state.data?.progress?.phases;
+
+  for (let i = 0; i < phases.length; i++) {
+    for (let j = 0; j < phases[i].order.length; j++) {
+      if (phases[i].order[j].win === 0 || phases[i].order[j].win === 1) {
+        data[phases[i].order[j].win]++;
+      }
+    }
+  }
+
+  return data;
+});
+
 const teamBoxes = ref([]);
 onMounted(() => {
   setInterval(() => {
@@ -101,7 +116,7 @@ onMounted(() => {
         :key="i"
       >
         <div class="content">
-          <team-box :team="team" ref="teamBoxes"></team-box>
+          <team-box ref="teamBoxes" :team="team" :point="pointsFromSheet[i]"></team-box>
         </div>
       </div>
     </div>

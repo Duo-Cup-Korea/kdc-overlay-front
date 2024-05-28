@@ -1,8 +1,6 @@
 <script setup>
 import { useOverlayDataStore } from "@/socket.js";
-import { computed } from "vue";
-import { Carousel, Slide } from "vue3-carousel";
-import "vue3-carousel/dist/carousel.css";
+import { computed, onMounted, ref } from "vue";
 import { secondsToMMSS } from "../assets/main.js";
 import RoundBox from "@/components/RoundBox.vue";
 
@@ -42,37 +40,42 @@ const activePages = computed(() => {
     return ["metadata", "title"];
   }
 });
+const currPage = ref(0);
+
+onMounted(() => {
+  setInterval(() => (currPage.value = (currPage.value + 1) % activePages.value.length), 10000);
+});
 </script>
 
 <template>
   <div class="master-current-map" :style="{ backgroundImage: `url(${bgUrl})` }">
     <div class="bgDim absolute-center"></div>
-    <div class="carouselWrapper">
-      <Carousel :autoplay="10000" :wrap-around="true">
-        <Slide v-for="slide in activePages" :key="slide">
-          <div class="carousel__item metadata" v-if="slide === 'metadata'">
-            CS&nbsp;<b>{{ np?.stats.modified.cs.toFixed(1) }}</b
-            >&nbsp;/&nbsp;AR&nbsp; <b>{{ np?.stats.modified.ar.toFixed(1) }}</b
-            >&nbsp;/&nbsp;OD&nbsp; <b>{{ np?.stats.modified.od.toFixed(1) }}</b
-            >&nbsp;/&nbsp;HP&nbsp; <b>{{ np?.stats.modified.hp.toFixed(1) }}</b
-            >&nbsp;/&nbsp; <b>{{ np?.stats.modified.sr.toFixed(2) }}</b> ☆&nbsp;/&nbsp;
-            <b>{{ secondsToMMSS(np?.stats.modified.length / 1000) }}</b
-            >&nbsp;/&nbsp; <b>{{ np?.stats.modified.bpm }}</b
-            >&nbsp;BPM
-          </div>
-          <div class="carousel__item vertical-center" v-if="slide === 'title'">
-            <round-box v-if="np?.code" mode="code" :value="np?.code" class="roundBox"></round-box>
-            <b>{{ np?.artist }}</b
-            >&nbsp;-&nbsp;<b>{{ np?.title }}</b
-            >&nbsp;[{{ np?.difficulty }}]&nbsp;by&nbsp;{{ np?.mapper }}
-          </div>
-          <div class="carousel__item vertical-center" v-if="slide === 'pick'">
-            <b>Picked</b>&nbsp;by:
-            <round-box mode="acronym" :value="currentMapPicker[1]" class="roundBox"></round-box>
-            {{ currentMapPicker[0] }}
-          </div>
-        </Slide>
-      </Carousel>
+    <div class="contents">
+      <Transition name="switchPage" mode="out-in">
+        <div class="page" v-if="activePages[currPage] === 'metadata'" :key="currPage">
+          CS <b>{{ np?.stats.modified.cs.toFixed(1) }}</b> / AR
+          <b>{{ np?.stats.modified.ar.toFixed(1) }}</b> / OD
+          <b>{{ np?.stats.modified.od.toFixed(1) }}</b> / HP
+          <b>{{ np?.stats.modified.hp.toFixed(1) }}</b> /
+          <b>{{ np?.stats.modified.sr.toFixed(2) }}</b> ☆ /
+          <b>{{ secondsToMMSS(np?.stats.modified.length / 1000) }}</b> /
+          <b>{{ np?.stats.modified.bpm }}</b> BPM
+        </div>
+      </Transition>
+      <Transition name="switchPage" mode="out-in">
+        <div class="page" v-if="activePages[currPage] === 'title'" :key="currPage">
+          <round-box v-if="np?.code" mode="code" :value="np?.code" class="roundBox"></round-box>
+          <b>{{ np?.artist }}</b> - <b>{{ np?.title }}</b> [{{ np?.difficulty }}] by
+          {{ np?.mapper }}
+        </div>
+      </Transition>
+      <Transition name="switchPage" mode="out-in">
+        <div class="page" v-if="activePages[currPage] === 'pick'" :key="currPage">
+          <b>Picked</b> by:
+          <round-box mode="acronym" :value="currentMapPicker[1]" class="roundBox"></round-box>
+          {{ currentMapPicker[0] }}
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -86,18 +89,38 @@ const activePages = computed(() => {
 }
 
 .bgDim {
+  z-index: -1;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.carouselWrapper {
-  height: 50px;
+.contents {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   font-size: 20px;
+  white-space: pre;
 }
 
-.metadata {
-  line-height: 50px;
+.switchPage-enter-active {
+  opacity: 0;
+  animation: 500ms fadeIn 500ms;
+}
+
+.switchPage-leave-active {
+  animation: fadeIn 500ms reverse;
+}
+
+.page {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  height: fit-content;
+  text-align: center;
+  width: 100%;
 }
 
 .roundBox {

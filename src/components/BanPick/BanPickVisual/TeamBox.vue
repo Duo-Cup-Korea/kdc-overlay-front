@@ -6,6 +6,7 @@ import { computed, ref } from "vue";
 
 const props = defineProps({
   team: Object,
+  point: Number,
 });
 
 const players = computed(() =>
@@ -28,6 +29,7 @@ defineExpose({
 
 <template>
   <div class="master-team-box">
+    <div class="point">{{ point }}</div>
     <Carousel ref="carousel" :wrap-around="true">
       <Slide v-for="slide in 1" :key="slide">
         <div class="carousel__item">
@@ -98,5 +100,17 @@ defineExpose({
 .nick {
   font-size: 24px;
   line-height: 48px;
+}
+
+.point {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  font-size: 128px;
+  line-height: 128px;
+  font-style: italic;
+  font-weight: bolder;
+  color: black;
+  opacity: 0.3;
 }
 </style>

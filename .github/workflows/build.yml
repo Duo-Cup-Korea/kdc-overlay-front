@@ -1,13 +1,12 @@
 name: Build and Upload Artifacts
 on:
   push:
-    branches: [ "kdc2024" ]
+    branches: ["kdc2024"]
   pull_request:
-    branches: [ "kdc2024" ]
+    branches: ["kdc2024"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,24 +15,24 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Download dependencies
-      run: npm ci
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-    - name: Build
-      run: npm run build --if-present
-    # run: npm test
+      - name: Download dependencies
+        run: npm ci
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: kdc-overlay-front
-        path: dist/
+      - name: Build
+        run: npm run build --if-present
+      # run: npm test
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kdc-overlay-front
+          path: dist/

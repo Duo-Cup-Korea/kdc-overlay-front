@@ -41,26 +41,23 @@ const proportions = computed(() => {
   if (!sum) return data; // default value if sum is 0 (avoid dividing with 0)
 
   if (props.teamSize === 1) {
-    // 1vs1: ^(1/2) scale, diff cap 200,000
+    // 1vs1: ^(1/1.7) scale, diff cap 200,000
     data = [50, 0, 0, 0]; // base value
     data[0] +=
       30 *
-      clamp(
-        ((diff.value > 0 ? 1 : -1) * Math.sqrt(Math.abs(diff.value))) / Math.sqrt(200000),
-        -1,
-        1
-      );
+      clamp((diff.value > 0 ? 1 : -1) * Math.pow(Math.abs(diff.value) / 200000, 1 / 1.7), -1, 1);
     data[2] = 100 - data[0];
     data[1] = data[3] = 0;
   } else {
     // 2vs2: proportion of scores subtracted by the lowest, added to the base value
-    data = [17, 17, 17, 17]; // base value
+    const baseValue = 17 + Math.min(0, 1 - Math.max(...scores.value) / 150000) * 8; // minned to 17 at 150,000 scores
+    data.fill(baseValue);
     const lowest = Math.min(...scores.value);
     const reduced = scores.value.map((x) => x - lowest);
     const reducedSum = sum - 4 * lowest;
 
     for (let i = 0; i < reduced.length; i++) {
-      data[i] += 32 * (reduced[i] / reducedSum);
+      data[i] += 4 * (25 - baseValue) * (reduced[i] / reducedSum);
     }
   }
 

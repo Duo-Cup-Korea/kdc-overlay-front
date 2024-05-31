@@ -1,9 +1,9 @@
 name: Build and Upload Artifacts
 on:
   push:
-    branches: main
+    branches: [ "kdc2024" ]
   pull_request:
-    branches: main
+    branches: [ "kdc2024" ]
 
 jobs:
   build:

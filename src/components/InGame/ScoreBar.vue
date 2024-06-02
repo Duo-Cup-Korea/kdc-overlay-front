@@ -50,7 +50,7 @@ const proportions = computed(() => {
     data[1] = data[3] = 0;
   } else {
     // 2vs2: proportion of scores subtracted by the lowest, added to the base value
-    const baseValue = 17 + Math.max(0, 1 - (Math.max(...scores.value) / 150000)) * 8; // minned to 17 at 150,000 scores
+    const baseValue = 17 + Math.max(0, 1 - Math.max(...scores.value) / 150000) * 8; // minned to 17 at 150,000 scores
     data.fill(baseValue);
     const lowest = Math.min(...scores.value);
     const reduced = scores.value.map((x) => x - lowest);

@@ -19,6 +19,19 @@ onUpdated(() => {
     masterElem.value.lastElementChild.scrollIntoView({ behavior: "smooth" });
   }
 });
+
+const teamNicks = computed(() => {
+  const teams = state.data?.teams;
+  return teams.map((x) => x.players.map((y) => y.nick));
+});
+const nickCol = (nick) => {
+  if (teamNicks.value?.[0]?.includes(nick)) {
+    return "var(--color-red)";
+  } else if (teamNicks.value?.[1]?.includes(nick)) {
+    return "var(--color-blue)";
+  }
+  return "var(--color-yellow)";
+};
 </script>
 
 <template>
@@ -27,9 +40,8 @@ onUpdated(() => {
     <div v-for="item in chatData" :key="item">
       <div class="horizontal-box chat">
         <div class="timestamp roboto">{{ formatTime(item[0]) }}</div>
-        <div class="nick" :style="{ color: `var(--color-yellow)` }">{{ item[1] }}</div>
+        <div class="nick" :style="{ color: nickCol(item[1]) }">{{ item[1] }}</div>
         <div class="cell message">{{ item[2] }}</div>
-        <!--<div class="message">Duis aute irure dolor in reprehenderit</div>-->
       </div>
     </div>
     <!---->

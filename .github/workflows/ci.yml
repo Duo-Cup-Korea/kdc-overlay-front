@@ -60,10 +60,10 @@ jobs:
       # Create Release if Bumped #
       ############################
 
-      - name: Download Build Artifacts
+      - name: Download build artifacts
         if: steps.check.outputs.changed == 'true'
         id: download-artifact
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v4
         with:
           skip_unpack: true
 

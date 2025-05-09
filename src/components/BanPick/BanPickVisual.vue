@@ -8,8 +8,8 @@ import { getMappool } from "@/assets/main.js";
 const state = useOverlayDataStore();
 
 const cellData = computed(() => {
-  let insertOrder;
-  let disableOrder;
+  let insertOrder = [];
+  let disableOrder = [];
   let hideOrder = [6, 9];
   let data = new Array(12);
 
@@ -31,17 +31,16 @@ const cellData = computed(() => {
    *  1 3|4 6 8 10
    * */
 
-  if (bo.value === 9 || (bo.value === 11 && phase.value === 1)) {
-    insertOrder = [0, 1, 4, 5, 7, 8];
-    disableOrder = [2, 3, 10, 11];
-  } else if ((bo.value === 11 && phase.value === 2) || (bo.value === 13 && phase.value === 2)) {
-    insertOrder = [0, 1, 4, 5, 7, 8, 10, 11];
-    disableOrder = [2, 3];
-  } else if (bo.value === 13 && phase.value === 1) {
-    insertOrder = [0, 1, 2, 3, 4, 5, 7, 8, 10, 11];
-    disableOrder = [];
+  if (phase.value === 1) {
+    insertOrder = [0, 1, 2, 3];
   } else {
-    return [];
+    disableOrder = [0, 1, 2, 3];
+  }
+  insertOrder = [...insertOrder, 4, 5, 7, 8];
+  if (bo.value === 13) {
+    insertOrder = [...insertOrder, 10, 11];
+  } else {
+    disableOrder = [...disableOrder, 10, 11];
   }
 
   for (let i = 0; i < insertOrder.length; i++) {

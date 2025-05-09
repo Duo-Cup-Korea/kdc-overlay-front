@@ -28,6 +28,7 @@ state.connect();
 
 <style scoped>
 .topBar {
+  height: 85px;
   margin: 60px 60px 40px 60px;
 }
 

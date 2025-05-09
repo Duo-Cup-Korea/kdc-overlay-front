@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-const tournamentName = ref("Duo Cup: Korea 2024");
+const tournamentName = ref("Duo Cup: Korea 2025");
 const text1 = computed(() => state.data.bracket);
 const text1Bold = ref(false);
 const text2 = computed(() => {
@@ -23,7 +23,7 @@ const text2 = computed(() => {
   }
   return state.data.type;
 });
-const text2Bold = ref("true");
+const text2Bold = ref(true);
 
 const horizontal = ref(props.orientation === "horizontal");
 </script>
@@ -53,5 +53,8 @@ const horizontal = ref(props.orientation === "horizontal");
 
 .texts {
   margin-left: v-bind("horizontal ? '40px' : 'unset'");
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

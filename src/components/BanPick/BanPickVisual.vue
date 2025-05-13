@@ -44,7 +44,7 @@ const cellData = computed(() => {
   }
 
   for (let i = 0; i < insertOrder.length; i++) {
-    if (i < banPickData.value.length) {
+    if (i < banPickData.value?.length) {
       data[insertOrder[i]] = {
         visibility: 2,
         pickBan: banPickData.value[i][0],
@@ -52,7 +52,7 @@ const cellData = computed(() => {
         code: banPickData.value[i][2],
         mapSetId: banPickData.value[i][3],
       };
-    } else if (i === banPickData.value.length) {
+    } else if (i === banPickData.value?.length) {
       data[insertOrder[i]] = { visibility: 1 };
     } else {
       data[insertOrder[i]] = { visibility: 0 };
@@ -71,11 +71,11 @@ const cellData = computed(() => {
 });
 
 const bo = computed(() => state.data?.bo);
-const phase = computed(() => state.data?.progress.phase);
+const phase = computed(() => state.data?.progress?.phase);
 const currentPhase = computed(() => state.data?.progress?.phases[phase.value - 1]);
 const firstPick = computed(() => currentPhase.value?.first_pick);
 const banPickData = computed(() =>
-  currentPhase.value.order
+  currentPhase.value?.order
     .filter((pick) => pick.code)
     .map((x) => [x.pick, x.team, x.code, getMappool(state.data.mappool, x.code).mapset_id])
 );

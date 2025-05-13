@@ -56,5 +56,5 @@ export function rankDuplicate(arr) {
 export function splitCode(code) {
   const mod = code.match(/[a-zA-Z]+/g)[0];
   const index = code.match(/\d+/g);
-  return [mod, index !== "" ? parseInt(index) : 1];
+  return [mod, index ? parseInt(index) : 1];
 }

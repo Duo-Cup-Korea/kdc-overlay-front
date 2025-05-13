@@ -7,20 +7,38 @@ const state = useOverlayDataStore();
 
 const mappool = computed(() => state.data?.mappool);
 const maps = computed(() => {
-  // [mod, index, title]
   const data = [];
+
   mappool.value?.forEach((map) => {
-    data.push([...splitCode(map.code), map.title]);
+    const splittedCode = splitCode(map.code);
+    data.push({
+      code: map.code,
+      mod: splittedCode[0],
+      i: splittedCode[1],
+      title: map.title,
+      artist: map.artist,
+      mapper: map.mapper,
+      last: false,
+      id: map.map_id,
+      setId: map.mapset_id,
+    });
   });
+
+  for (let i = 0; i < data.length; i++) {
+    if (i === data.length - 1 || data[i].mod !== data[i + 1].mod) {
+      data[i].last = true;
+    }
+  }
+
   return data;
 });
 
 const columns = computed(() => {
-  let columns = [];
-  let column = [];
+  let columns = []; // Array of column
+  let column = []; // Array of maps
 
   for (let i = 0; i < maps.value.length; i++) {
-    let currentMod = maps.value[i][0];
+    let currentMod = maps.value[i].mod;
 
     // TB will be added at the end of DTs
     if (currentMod !== "TB") {
@@ -29,7 +47,7 @@ const columns = computed(() => {
 
     // Line Break Condition 1: not the last map
     if (i !== maps.value.length - 1) {
-      let nextMod = maps.value[i + 1][0];
+      let nextMod = maps.value[i + 1].mod;
 
       if (
         currentMod !== nextMod && // Condition 2: mod changed
@@ -37,7 +55,7 @@ const columns = computed(() => {
         !(currentMod === "FM" && nextMod === "FcM") // Condition 4: same for FMs and FcMs
       ) {
         // Add TB at the end of DTs before proceeding to the next column
-        if (currentMod === "DT" && maps.value.slice(-1)[0][0] === "TB") {
+        if (currentMod === "DT" && maps.value.slice(-1)[0].mod === "TB") {
           column.push(maps.value.slice(-1)[0]);
         }
 
@@ -62,6 +80,7 @@ const unavailableMaps = computed(() =>
     .flat(1)
     .map((x) => x.code)
 );
+const unavailable = (map) => unavailableMaps.value.includes(map.code);
 </script>
 
 <template>
@@ -71,19 +90,33 @@ const unavailableMaps = computed(() =>
         class="maps"
         v-for="(map, j) in column"
         :key="j"
-        :style="{ flexGrow: `${map[0] === 'TB' ? 1 : 0}` }"
+        :style="{ flexGrow: `${map.mod === 'TB' ? 1 : 0}` }"
       >
-        <div
-          class="map horizontal-box"
-          :class="{
-            unavailable: unavailableMaps.includes(map[0] + (map[0] === 'TB' ? '' : map[1])),
-          }"
-        >
-          <div class="code roboto" :style="{ color: `var(--color-${map[0]}` }">
-            {{ map[0] + (map[0] === "TB" ? "" : map[1]) }}
+        <div class="row horizontal-box">
+          <div
+            class="code roboto"
+            :style="{ color: `var(--color-${map.mod}`, opacity: map.i - 1 ? 0 : 1 }"
+          >
+            <div class="first" v-if="map.i === 1"></div>
+            {{ map.mod }}
           </div>
-          <div class="divider"></div>
-          <div class="title">{{ map[2] }}</div>
+          <div class="horizontal-box map" :class="{ unavailable: unavailable(map) }">
+            <div class="divider" :class="{ last: map.last }"></div>
+            <div class="horizontal-box info-wrapper">
+              <div
+                class="bg"
+                :style="{
+                  backgroundImage: `url(https://assets.ppy.sh/beatmaps/${map.setId}/covers/list@2x.jpg)`,
+                }"
+              ></div>
+              <div>
+                <div class="title">
+                  {{ map.title }}
+                </div>
+                <div class="artistMapper">{{ map.artist }} // {{ map.mapper }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,34 +144,77 @@ const unavailableMaps = computed(() =>
   justify-content: flex-end;
 }
 
-.map {
+.row {
   height: 40px;
   align-items: center;
   transition: opacity 0.5s;
 }
 
-.map.unavailable {
-  opacity: 0.5;
-}
-
 .code {
+  position: relative;
   font-size: 36px;
-  width: 100px;
-  min-width: 100px;
+  width: 70px;
+  min-width: 70px;
   text-align: right;
 }
 
+.unavailable {
+  opacity: 0.4;
+}
+
 .divider {
-  height: 30px;
+  box-sizing: border-box;
+  height: 40px;
   margin: 0 10px 0 10px;
   width: 2px;
+  min-width: 2px;
   background-color: var(--color-line-highlight);
 }
 
-.title {
-  font-size: 24px;
+.divider.last {
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.first {
+  position: absolute;
+  right: -15px;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+}
+
+.map,
+.map div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.info-wrapper {
+  min-width: 0;
+}
+
+.bg {
+  width: 45px;
+  min-width: 45px;
+  height: 36px;
+  background-position: center;
+  background-size: cover;
+  margin-right: 8px;
+}
+
+.unavailable .bg {
+  filter: grayscale(100%);
+}
+
+.title {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.artistMapper {
+  font-size: 12px;
+  opacity: 0.8;
 }
 </style>

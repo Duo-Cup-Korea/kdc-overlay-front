@@ -141,6 +141,15 @@ const blueLeaderProportion = computed(
         </div>
       </div>
     </div>
+
+    <!--Background Color-->
+    <div
+      class="bgCol"
+      :style="{
+        backgroundColor:
+          diff === 0 ? 'unset' : `var(--color-${diff > 0 ? 'red' : 'blue'}-translucent)`,
+      }"
+    ></div>
   </div>
 </template>
 
@@ -149,6 +158,15 @@ const blueLeaderProportion = computed(
   position: relative;
   width: 100%;
   height: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.bgCol {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
 }
 
 .middlePoint {

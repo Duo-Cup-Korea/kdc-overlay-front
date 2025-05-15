@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import StarComponent from "@/components/InGame/TeamBar/StarComponent.vue";
 import RoundBox from "@/components/RoundBox.vue";
 import { useOverlayDataStore } from "@/socket.js";
@@ -14,25 +14,29 @@ const props = defineProps({
 });
 
 const teamInfo = computed(() => state.data?.teams?.[props.teamIndex]);
+const slots = computed(() => (state.data?.lobby?.bo + 1) / 2);
+const points = computed(() => state.data?.lobby?.set_scores[props.teamIndex]);
 const stars = computed(() => {
-  if (!state.data?.lobby || !state.data.lobby.bo) {
-    return [];
-  }
+  if (!state.data?.lobby || !state.data.lobby.bo) return [];
 
-  const slots = (state.data.lobby.bo + 1) / 2;
-  const point = state.data.lobby.set_scores[props.teamIndex];
+  const stars = new Array(slots.value);
+  for (let i = 0; i < points.value; i++) stars[i] = true;
 
-  const stars = new Array(slots);
-
-  for (let i = 0; i < point; i++) {
-    stars[i] = true;
-  }
   return stars;
+});
+
+const masterRef = ref();
+watch(points, (newPoints, oldPoints) => {
+  if (masterRef.value && newPoints > oldPoints) {
+    console.log("New star added!");
+    masterRef.value.style.backgroundColor = "rgba(237,206,25,0.3)";
+    setTimeout(() => (masterRef.value.style.backgroundColor = ""), 500);
+  }
 });
 </script>
 
 <template>
-  <div class="master-team-bar horizontal-box">
+  <div class="master-team-bar horizontal-box" ref="masterRef">
     <round-box
       :color="teamIndex ? 'blue' : 'red'"
       :value="teamInfo?.acronym"
@@ -49,10 +53,11 @@ const stars = computed(() => {
 <style scoped>
 .master-team-bar {
   align-items: center;
+  transition: background-color 500ms ease;
+  padding: 8px;
 }
 
 .acronym {
-  margin-left: 10px;
   width: 100px;
   height: 50px;
 }
@@ -61,5 +66,10 @@ const stars = computed(() => {
   font-size: 40px;
   font-weight: bold;
   margin-left: 40px;
+  line-height: 50px;
+}
+
+.stars{
+  margin-right: 20px;
 }
 </style>

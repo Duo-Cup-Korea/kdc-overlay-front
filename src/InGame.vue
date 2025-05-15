@@ -199,16 +199,16 @@ watch(tourneyState, (newState, oldState) => {
 
 .teamBar {
   position: absolute;
-  width: 100%;
+  width: 1124px;
   height: 50px;
 }
 
 .teamBar.red {
-  top: -60px;
+  top: -72px;
 }
 
 .teamBar.blue {
-  bottom: -60px;
+  bottom: -72px;
 }
 
 .subBox {

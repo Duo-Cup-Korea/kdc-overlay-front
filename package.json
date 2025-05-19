@@ -1,6 +1,6 @@
 {
   "name": "kdc-overlay-front",
-  "version": "2024.2.0",
+  "version": "2025.0.0",
   "private": true,
   "type": "module",
   "scripts": {

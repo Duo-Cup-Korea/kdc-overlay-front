@@ -63,8 +63,8 @@ const contentBg_ref = ref(null);
 
 .header {
   position: absolute;
-  top: 50px;
-  left: 40px;
+  top: 10px;
+  left: 50px;
 }
 
 .nowPlayingWrapper {

@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-const tournamentName = ref("Duo Cup: Korea 2025");
+const tournamentName = ref("Duo Cup: Korea 2026");
 const text1 = computed(() => state.data.bracket);
 const text1Bold = ref(false);
 const text2 = computed(() => {

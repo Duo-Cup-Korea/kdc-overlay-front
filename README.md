@@ -1,5 +1,11 @@
 # kdc-overlay-front
 
+## Project Archived
+
+This frontend project has been intergrated to the backend project [kdc-overlay](https://github.com/Duo-Cup-Korea/kdc-overlay) to change the project structure to monorepo.
+
+---
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
